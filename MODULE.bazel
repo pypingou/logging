@@ -78,11 +78,29 @@ gcc.toolchain(
     use_default_package = True,
     version = "12.2.0",
 )
+## AutoSD10 Toolchain
+gcc.toolchain(
+    name = "score_autosd10_x86_64_toolchain",
+    runtime_ecosystem = "autosd10",
+    target_cpu = "x86_64",
+    target_os = "linux",
+    use_default_package = True,
+)
+gcc.toolchain(
+    name = "score_autosd10_aarch64_toolchain",
+    runtime_ecosystem = "autosd10",
+    target_cpu = "aarch64",
+    target_os = "linux",
+    use_default_package = True,
+)
+
 use_repo(
     gcc,
     "score_gcc_x86_64_toolchain",
     "score_qcc_aarch64_toolchain",
     "score_qcc_x86_64_toolchain",
+    "score_autosd10_aarch64_toolchain",
+    "score_autosd10_x86_64_toolchain",
 )
 
 PYTHON_VERSION = "3.12"
@@ -102,4 +120,11 @@ bazel_dep(name = "score_communication", version = "0.2.1")
 
 # Rust dependencies
 
-bazel_dep(name = "score_baselibs_rust", version = "0.1.0")
+bazel_dep(name = "score_baselibs_rust", version = "0.1.2")
+archive_override(
+    module_name = "score_baselibs_rust",
+    integrity = "sha256-4kzcXcvGi9xBEEnrPOiSEvteITZMPKmK3MNgJXQIGtY=",
+    patches = ["//patches:score_baselibs_rust_nonnull.patch"],
+    strip_prefix = "baselibs_rust-0.1.2",
+    urls = ["https://github.com/eclipse-score/baselibs_rust/archive/refs/tags/v0.1.2.tar.gz"],
+)
